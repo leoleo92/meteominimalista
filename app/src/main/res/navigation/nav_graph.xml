@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeWeatherFragment2">
+    <fragment
+        android:id="@+id/homeWeatherFragment2"
+        android:name="com.leonardo.weatherapp.view.HomeWeatherFragment"
+        android:label="home_weather_screen_fragment"
+        tools:layout="@layout/home_weather_screen_fragment" >
+        <action
+            android:id="@+id/action_homeWeatherFragment2_to_searchWeatherFragment"
+            app:destination="@id/searchWeatherFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchWeatherFragment"
+        android:name="com.leonardo.weatherapp.view.SearchWeatherFragment"
+        android:label="search_layout"
+        tools:layout="@layout/search_layout" />
+</navigation>
