@@ -26,6 +26,7 @@ class WeatherRecyclerViewAdapter :
 
 
         fun bind(item: Forecastday) {
+            //aas
 
             binding.apply {
 
