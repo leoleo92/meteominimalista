@@ -40,6 +40,7 @@ class WeatherRecyclerViewAdapter :
                 c.time = date
 
 
+
                 root.setOnClickListener {
                     day.visibility = if (day.isVisible)  View.GONE else View.VISIBLE
                     morning.visibility = if (morning.isVisible)  View.GONE else View.VISIBLE
