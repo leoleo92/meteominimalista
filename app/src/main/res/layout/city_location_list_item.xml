@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp">
+    android:layout_margin="10dp"
+    android:background="#000000">
 
     <ImageView
         android:id="@+id/imageView"
@@ -16,14 +17,26 @@
         app:srcCompat="@drawable/city_image" />
 
     <TextView
-        android:id="@+id/city_single_item"
-        android:layout_width="0dp"
+        android:id="@+id/city_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
+        android:layout_marginStart="8dp"
+        android:textAlignment="viewStart"
+        android:textColor="#FFFFFF"
         android:textSize="29dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Milano" />
+
+    <TextView
+        android:id="@+id/cityRegion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="9dp"
+        android:textColor="#F4F1F1"
+        android:textSize="16dp"
+        app:layout_constraintStart_toEndOf="@+id/city_name"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="(Lombardia)" />
 </androidx.constraintlayout.widget.ConstraintLayout>

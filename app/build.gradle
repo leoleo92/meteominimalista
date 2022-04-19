@@ -4,23 +4,34 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id "androidx.navigation.safeargs.kotlin"
+    id 'kotlin-parcelize'
 }
 
+
+
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
+
+
 
     defaultConfig {
 
 
-
-        applicationId "com.leonardo.weatherapp"
-        minSdkVersion 21
+        applicationId "com.leonardo.pani.weatherapp"
+        minSdkVersion 29
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        //Used to pass the Api key
+        each{type ->
+            type.buildConfigField("String", 'MAIN_API', '\"kAorEB2sPPCGRPHIMfrh1xy5baDnpX8q\"')
+        }
+
+
     }
 
     kapt {
@@ -44,21 +55,24 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
 }
 
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
 
 
 
@@ -68,8 +82,8 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.9.0"
 
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
 
     // Coroutine Lifecycle Scopes
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
@@ -77,10 +91,9 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.2.2"
 
     //dagger-hilt
-    implementation "com.google.dagger:hilt-android:2.33-beta"
-    kapt "com.google.dagger:hilt-android-compiler:2.33-beta"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
-    kapt "androidx.hilt:hilt-compiler:1.0.0-beta01"
+    implementation "com.google.dagger:hilt-android:2.38"
+    kapt "com.google.dagger:hilt-android-compiler:2.38"
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
 
     //Lottie Files for splash screen animation
     def lottieVersion = "3.4.0"
@@ -96,6 +109,23 @@ dependencies {
     //Datastore
     implementation "androidx.datastore:datastore:1.0.0"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    //Expandable recyclerview
+    implementation "com.github.skydoves:expandablelayout:1.0.7"
+
+    //Mockito Library
+    testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"
+    testImplementation 'org.mockito:mockito-core:2.28.2'
+    androidTestImplementation 'org.mockito:mockito-android:2.24.5'
+    testImplementation "org.mockito:mockito-inline:3.11.2"
+
+
+    //Coroutine test
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1'
+
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+
+
 
 
 }

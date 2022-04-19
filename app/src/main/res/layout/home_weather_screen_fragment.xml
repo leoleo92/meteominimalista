@@ -1,41 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.HomeWeatherFragment">
+    android:id="@+id/constraint_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sunny"
+    tools:context=".view.main.HomeWeatherFragment">
 
-    <TextView
-        android:id="@+id/city_name"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:textSize="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/circle"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Milan"/>
+        app:layout_constraintTop_toBottomOf="@+id/search_city_icn">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="25dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/location_icn" />
+
+        <TextView
+            android:id="@+id/city_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:fontFamily="@font/bahnschrift"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="5dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="#FFFFFF"
+            android:textSize="30dp"
+            tools:text="Copenaghen" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/search_city_icn"
+        android:layout_width="34dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/search_icn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/current_condition_text"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="48dp"
+        android:ellipsize="marquee"
+        android:focusableInTouchMode="true"
+        android:fontFamily="@font/bahnschrift"
+        android:gravity="start"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/city_temperature"
+        tools:text="Prevalentemente nuvoloso con raffiche" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="357dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="18dp"
+        android:fillViewport="true"
+        android:requiresFadingEdge="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/current_condition_text"
+        app:layout_constraintVertical_bias="0.839">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="0"
+                android:background="@drawable/circle"
+                android:paddingBottom="13dp"
+                android:requiresFadingEdge="vertical" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <TextView
         android:id="@+id/city_temperature"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="123dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="151dp"
+        android:fontFamily="@font/bahnschrift"
+        android:textColor="#FFFFFF"
         android:textSize="100dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/city_name"
-        tools:text="9°" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        tools:text="25" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="417dp"
-        android:layout_height="284dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:text="°"
+        android:textColor="#FFFFFF"
+        android:textSize="60dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/city_temperature"
+        app:layout_constraintTop_toTopOf="@+id/city_temperature" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,19 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeWeatherFragment2">
+    app:startDestination="@id/homeWeatherFragment">
     <fragment
-        android:id="@+id/homeWeatherFragment2"
-        android:name="com.leonardo.weatherapp.view.HomeWeatherFragment"
+        android:id="@+id/homeWeatherFragment"
+        android:name="com.leonardo.pani.weatherapp.view.main.HomeWeatherFragment"
         android:label="home_weather_screen_fragment"
         tools:layout="@layout/home_weather_screen_fragment" >
         <action
-            android:id="@+id/action_homeWeatherFragment2_to_searchWeatherFragment"
-            app:destination="@id/searchWeatherFragment" />
+            android:id="@+id/action_homeWeatherFragment_to_searchWeatherFragment"
+            app:destination="@id/searchWeatherFragment"
+            app:enterAnim="@anim/circle_explosion_anim"
+        />
+        <!--app:popUpTo="@+id/firstFragment"-->
+
+        <action
+            android:id="@+id/action_homeWeatherFragment_to_errorPage"
+            app:destination="@id/errorPage" />
     </fragment>
     <fragment
         android:id="@+id/searchWeatherFragment"
-        android:name="com.leonardo.weatherapp.view.SearchWeatherFragment"
+        android:name="com.leonardo.pani.weatherapp.view.citysearch.SearchWeatherFragment"
         android:label="search_layout"
-        tools:layout="@layout/search_layout" />
+        tools:layout="@layout/search_layout"
+        app:popUpTo="@+id/homeWeatherFragment"
+>
+        <action
+            android:id="@+id/action_searchWeatherFragment_to_errorPage"
+            app:destination="@id/errorPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/errorPage"
+        android:name="com.leonardo.pani.weatherapp.view.ErrorPage"
+        android:label="ErrorPage"
+        tools:layout="@layout/error_page_layout"/>
 </navigation>
