@@ -1,40 +1,44 @@
 package com.leonardo.pani.weatherapp.view.main
 
 import android.util.Log
-import androidx.annotation.MainThread
 import androidx.lifecycle.*
-import com.leonardo.pani.weatherapp.model.City
-import com.leonardo.pani.weatherapp.repo.WeatherRepo
+import com.leonardo.pani.weatherapp.model.CityNameAndCoordinates
+import com.leonardo.pani.weatherapp.model.Feature
+import com.leonardo.pani.weatherapp.model.WeatherForecast
+import com.leonardo.pani.weatherapp.repo.RepoInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-
 @HiltViewModel
-class WeatherViewModel @Inject constructor(private val repo: WeatherRepo) : ViewModel() {
+class WeatherViewModel @Inject constructor(private val repo: RepoInterface) : ViewModel() {
 
 
     private val weatherChannel = Channel<WeatherUseCases>()
     val receiveFromWeatherViewModelChannel = weatherChannel.receiveAsFlow()
 
-    private val _response = ActionLiveData<City>()
-    val weatherResponse: LiveData<City>
+    private val _response = ActionLiveData<WeatherForecast>()
+    val weatherResponse: LiveData<WeatherForecast>
         get() = _response
 
 
     init {
 
-        sendWeatherConditionToUI()
+        if (_response.value == null) {
+            viewModelScope.launch {
+                weatherChannel.send(WeatherUseCases.NavigateToSetLocationScreen())
+            }
+        }
+        //sendWeatherConditionToUI()
     }
 
     private fun sendWeatherConditionToUI() {
 
         viewModelScope.launch {
-
+/*
 
             collectSavedCityApiLocationAndCityName().collect { ApiAndCityName ->
 
@@ -53,7 +57,7 @@ class WeatherViewModel @Inject constructor(private val repo: WeatherRepo) : View
 
                     Log.d("WeatherViewModel", "The apilocation is: $apiLocation")
 
-                    //Get the Current Conditions
+                    Get the Current Conditions
                     val currentConditionData =
                         repo.getCurrentConditions(apiLocation)
                     val currentCondition = currentConditionData.body()
@@ -75,48 +79,41 @@ class WeatherViewModel @Inject constructor(private val repo: WeatherRepo) : View
                 }
                 _response.postValue(city)
 
-            }
+            }*/
         }
 
 
     }
 
     fun memorizeCity(cityApiLocation: String, cityName: String) {
-        Log.d("WeatherViewModel", "Received city infos, apilocation: $cityApiLocation and cityname: $cityName")
+        Log.d(
+            "WeatherViewModel",
+            "Received city infos, apilocation: $cityApiLocation and cityname: $cityName"
+        )
         viewModelScope.launch {
-            repo.memorizeLocationNameAndLocalApi(cityName, cityApiLocation)
+            //repo.memorizeLocationNameAndLocalApi(cityName, cityApiLocation)
         }
     }
 
-    fun collectSavedCityApiLocationAndCityName() = repo.getLastCityApiAndName()
 
-    fun goToSetLocationScreen() {
+
+    fun requestWeatherForecastAndCurrentConditions(basicInfo: CityNameAndCoordinates) {
         viewModelScope.launch {
-            weatherChannel.send(WeatherUseCases.NavigateToSetLocationScreen())
-        }
-    }
+            val weatherInfo =
+                repo.getCurrentConditionAndForecasts(cityLatAndLong = basicInfo.coordinates)
 
-    fun checkTheReceivedCity(city: City?) {
+            if (weatherInfo.isSuccessful && weatherInfo.body() != null) {
 
-        if (city != null) {
+                val forecast = weatherInfo.body()
+                Log.i("WeatherViewModel", "weatehr info: $forecast")
 
-            //The city is not null, we've got a successful response to the API request
-
-            Log.i(
-                "WeatherViewModel",
-                "The user searched the weather forecasts for ${city.cityName}"
-            )
-
-            // Handle the textValue result
-            memorizeCity(city.cityApiLocation, city.cityName)
-        } else {
-
-            //The city is null, which means we've reached the daily limit requests for the API
-            viewModelScope.launch {
+                //It's important to copy the result fromm the first api so that we can send all of the info to the _response and hence to the fragment
+                _response.sendAction(forecast?.copy(coordinates = basicInfo.coordinates, cityName = basicInfo.cityName)!!)
+            } else {
                 weatherChannel.send(WeatherUseCases.NavigateToTheErrorPage())
             }
-        }
 
+        }
     }
 
     sealed class WeatherUseCases {
@@ -125,8 +122,6 @@ class WeatherViewModel @Inject constructor(private val repo: WeatherRepo) : View
         class NavigateToTheErrorPage : WeatherUseCases()
 
     }
-
-
 
 
 }

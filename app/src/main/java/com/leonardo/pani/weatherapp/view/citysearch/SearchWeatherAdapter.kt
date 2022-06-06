@@ -6,10 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.leonardo.pani.weatherapp.databinding.CityLocationListItemBinding
-import com.leonardo.pani.weatherapp.model.CitiesItem
-import com.leonardo.pani.weatherapp.model.City
+import com.leonardo.pani.weatherapp.model.Feature
 
-class SearchWeatherAdapter(val listener: SearchItemClickListener): ListAdapter<CitiesItem, SearchWeatherAdapter.SearchViewHolder>(
+class SearchWeatherAdapter(val listener: SearchItemClickListener): ListAdapter<Feature, SearchWeatherAdapter.SearchViewHolder>(
     DiffCallBack()
 ) {
 
@@ -19,15 +18,17 @@ class SearchWeatherAdapter(val listener: SearchItemClickListener): ListAdapter<C
 
 
 
-        fun bind(city: CitiesItem) {
+        fun bind(city: Feature) {
 
 
             binding.apply {
-                cityName.text = city.LocalizedName
-                cityRegion.text = "(${city.AdministrativeArea.LocalizedName})"
+                cityName.text = city.place_name
+                cityRegion.text = "(${city.context.get(0).text_it})"
+
+
 
                 root.setOnClickListener {
-                    listener.onItemClicked(City(cityApiLocation = city.Key,cityName = city.LocalizedName,currentCondition = null,fivedayForecast = null))
+                    listener.onItemClicked(city)
                 }
 
             }
@@ -48,13 +49,13 @@ class SearchWeatherAdapter(val listener: SearchItemClickListener): ListAdapter<C
         holder.bind(item)
     }
 
-    class DiffCallBack : DiffUtil.ItemCallback<CitiesItem>() {
+    class DiffCallBack : DiffUtil.ItemCallback<Feature>() {
 
-        override fun areItemsTheSame(oldItem: CitiesItem, newItem: CitiesItem): Boolean {
-            return oldItem.Key == newItem.Key
+        override fun areItemsTheSame(oldItem: Feature, newItem: Feature): Boolean {
+            return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: CitiesItem, newItem: CitiesItem): Boolean {
+        override fun areContentsTheSame(oldItem: Feature, newItem: Feature): Boolean {
             return oldItem == newItem
         }
 

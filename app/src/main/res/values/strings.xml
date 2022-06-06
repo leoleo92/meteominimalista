@@ -4,4 +4,5 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
     <string name="turn_on_connection_message">Attiva la connessione per utilizzare l\'app</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

@@ -3,6 +3,7 @@ package com.leonardo.pani.weatherapp.view.main
 import android.animation.LayoutTransition
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,92 +12,51 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.leonardo.pani.weatherapp.databinding.SingleWeatherLayoutBinding
-import com.leonardo.pani.weatherapp.model.DailyForecast
+import com.leonardo.pani.weatherapp.model.Daily
 import com.leonardo.pani.weatherapp.utils.Consts
 import java.text.SimpleDateFormat
+import java.util.*
 
-class WeatherRecyclerViewAdapter(val clickLister: ClickedLastItem) :
-    androidx.recyclerview.widget.ListAdapter<DailyForecast, WeatherRecyclerViewAdapter.WeatherViewHolder>(
-        DiffCallBack()
-    ) {
+class WeatherRecyclerViewAdapter(val dailyForecasts: List<Daily>) :
+    RecyclerView.Adapter<WeatherRecyclerViewAdapter.WeatherViewHolder>() {
 
     inner class WeatherViewHolder(private val binding: SingleWeatherLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(item: DailyForecast, position: Int) {
+        fun bind(item: Daily) {
 
 
             binding.apply {
 
-                //For the last item the divider should not be visible for purely design purposes
-                if(position == itemCount-1) {
-                    divider.visibility = View.INVISIBLE
-                }
-
-                //Used for a smooth transition when the items gets visibile
-                detailsContainerLayout.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
-
-                root.setOnClickListener {
 
 
-                    TransitionManager.beginDelayedTransition(
-                        detailsContainerLayout,
-                        AutoTransition()
-                    )
+
+                //val format1 = SimpleDateFormat("yyyy-MM-dd")
+                val dateDay =
+                    SimpleDateFormat("EEEE", Locale.ITALIAN).format(item.dt * 1000).substring(0, 3)
+                Log.i("WeatherRecyclerViewAdapter", dateDay)
 
 
-                    detailsContainerLayout.visibility =
-                        if (detailsContainerLayout.isVisible) View.GONE else View.VISIBLE
+                dayOfTheWeek.text = dateDay
+                val mainIconToLoad = Consts.ICON_IDS.get(item.weather.get(0).icon)
 
-                    if(position != itemCount-1) {
-                        divider.visibility = if (divider.isVisible) View.GONE else View.VISIBLE
-                    }
-
-                    if (position == itemCount - 1 && (detailsContainerLayout.visibility == View.VISIBLE)) {
-
-                        //If the user clicks the last item of the list, scroll the view to the bottom so that the user can properly see all of the information
-                        clickLister.scrollViewToLastItem()
-                        divider2.requestFocus()
-                    }
-
-                }
-
-
-                val minCelsiusTemp =
-                    convertFahrenheitToCelsius(item.Temperature.Minimum.Value.toInt())
-                val maxCelsiusTemp =
-                    convertFahrenheitToCelsius(item.Temperature.Maximum.Value.toInt())
-
-
-                val format1 = SimpleDateFormat("yyyy-MM-dd");
-                val dateDay = format1.parse(item.Date.substring(0, 10));
-                val format2 = SimpleDateFormat("EEEE");
-
-
-                if (position == 0) {
-                    dayOfTheWeek.text = "Oggi"
-                } else if (position == 1) {
-                    dayOfTheWeek.text = "Domani"
-                } else {
-                    dayOfTheWeek.text = format2.format(dateDay).capitalize().substring(0, 3)
-
-                }
-
-                temperature.text = "${minCelsiusTemp.toInt()}° / ${maxCelsiusTemp.toInt()}°"
-                val iconNumberDay = Consts.ICON_MAP.get(item.Day.Icon)
-                Glide.with(binding.root).load(iconNumberDay).into(dayWeatherIcn)
-                val iconNumberNight = Consts.ICON_MAP.get(item.Day.Icon)
+                Glide.with(binding.root)
+                    .load(mainIconToLoad)
+                    .into(binding.weatherIcnToday)
+                /*val iconNumberDay = Consts.ICON_MAP.get(item.Day.Icon)
+                //Glide.with(binding.root).load(iconNumberDay).into(dayWeatherIcn)
+               // val iconNumberNight = Consts.ICON_MAP.get(item.Night.Icon)
                 Glide.with(binding.root).load(iconNumberNight).into(nightWeatherIcn)
-                Glide.with(binding.root).load(iconNumberDay).into(weatherIcnToday)
+                Glide.with(binding.root).load(iconNumberDay).into(weatherIcnToday)*/
 
 
                 //Detailed info
                 //Day
-                dayTemp.text = "$maxCelsiusTemp°"
+                maxTemp.text = "${item.temp.max.toInt()}°"
 
                 //Night
-                nightTemp.text = "$minCelsiusTemp°"
+                minTemp.text = "${item.temp.min.toInt()}°"
 
 
             }
@@ -119,24 +79,29 @@ class WeatherRecyclerViewAdapter(val clickLister: ClickedLastItem) :
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-        val currentForecast = getItem(position)
-        holder.bind(currentForecast, position)
+        val currentForecast = dailyForecasts.get(position)
+        holder.bind(currentForecast)
     }
 
-
-    class DiffCallBack : DiffUtil.ItemCallback<DailyForecast>() {
-        override fun areItemsTheSame(oldItem: DailyForecast, newItem: DailyForecast): Boolean {
-            return oldItem.Date == newItem.Date
+    /*
+    class DiffCallBack : DiffUtil.ItemCallback<Daily>() {
+        override fun areItemsTheSame(oldItem: Daily, newItem: Daily): Boolean {
+            return oldItem.dt == newItem.dt
         }
 
-        override fun areContentsTheSame(oldItem: DailyForecast, newItem: DailyForecast): Boolean {
-            return oldItem == newItem
+        override fun areContentsTheSame(oldItem: Daily, newItem: Daily): Boolean {
+            return oldItem.dt == newItem.dt
         }
 
     }
+*/
 
     private fun convertFahrenheitToCelsius(celsiusTemp: Int) =
         ((celsiusTemp - 32) * (5.0 / 9.0)).toInt()
+
+    override fun getItemCount(): Int {
+        return dailyForecasts.size
+    }
 
 
 }

@@ -3,14 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/circle.xml" value="0.211" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/city_image.xml" value="0.313" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/get_large.xml" value="0.313" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2685" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/location_icn.xml" value="0.313" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/splash_background.xml" value="0.3675" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_maps.xml" value="0.23072916666666668" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/error_page_layout.xml" value="0.34057971014492755" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/home_acitivity.xml" value="0.15885416666666666" />
-        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/home_weather_screen_fragment.xml" value="0.15885416666666666" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/home_weather_screen_fragment.xml" value="0.6522911051212938" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/lack_connection_layout.xml" value="0.34057971014492755" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/single_weather_layout.xml" value="0.5" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/splash_screen.xml" value="0.10562310030395136" />
       </map>
     </option>

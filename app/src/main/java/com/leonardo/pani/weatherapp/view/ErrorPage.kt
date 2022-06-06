@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import com.leonardo.pani.weatherapp.R
-import com.leonardo.pani.weatherapp.SplashScreenActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 

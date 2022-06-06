@@ -1,6 +1,6 @@
 package com.leonardo.pani.weatherapp
 
-import com.leonardo.pani.weatherapp.api.WeatherApi
+import com.leonardo.pani.weatherapp.api.SearchPlaceApi
 import com.leonardo.pani.weatherapp.utils.Consts
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetroFitService {
 
 
-    lateinit var retroFit: WeatherApi
+    lateinit var retroFit: SearchPlaceApi
 
     @Before
     fun setUp() {
@@ -20,7 +20,7 @@ class RetroFitService {
             .baseUrl(Consts.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(WeatherApi::class.java)
+            .create(SearchPlaceApi::class.java)
     }
 
     @Test

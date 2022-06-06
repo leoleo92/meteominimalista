@@ -3,23 +3,34 @@ package com.leonardo.pani.weatherapp.view.main
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.leonardo.pani.weatherapp.R
 import com.leonardo.pani.weatherapp.databinding.HomeWeatherScreenFragmentBinding
-import com.leonardo.pani.weatherapp.model.City
+import com.leonardo.pani.weatherapp.model.CityNameAndCoordinates
+import com.leonardo.pani.weatherapp.utils.Consts.ICON_IDS
 import com.leonardo.pani.weatherapp.view.citysearch.SearchWeatherFragment
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 const val TAG = "HomeWeatherFragment"
 
+
+
 @AndroidEntryPoint
-class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), ClickedLastItem {
+class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment) {
 
     val weatherViewModel: WeatherViewModel by viewModels()
     private lateinit var weatherRecyclerView: RecyclerView
@@ -33,7 +44,6 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), Cli
 
 
         val binding = HomeWeatherScreenFragmentBinding.bind(view)
-        val weatherAdapter = WeatherRecyclerViewAdapter(this)
 
 
         //Set the widgets
@@ -43,8 +53,12 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), Cli
 
 
             recyclerView.apply {
-                layoutManager = LinearLayoutManager(context)
-                adapter = weatherAdapter
+
+                val ltManager = LinearLayoutManager(context)
+                ltManager.orientation = RecyclerView.HORIZONTAL
+
+                layoutManager = ltManager
+
                 setHasFixedSize(true)
 
 
@@ -52,7 +66,7 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), Cli
 
             searchCityIcn.setOnClickListener {
 
-                weatherViewModel.goToSetLocationScreen()
+                //weatherViewModel.goToSetLocationScreen()
 
             }
 
@@ -60,30 +74,71 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), Cli
 
 
         //This retrieve the Five day forecast list and the current conditions of the city
-        weatherViewModel.weatherResponse.observe(viewLifecycleOwner) { city ->
-            //It means we have infos from a city
-            if (city.cityName.isNotEmpty()) {
-
-                val fivedayForecastList = city.fivedayForecast?.DailyForecasts
-                val currentConditions = city.currentCondition
+        weatherViewModel.weatherResponse.observe(viewLifecycleOwner) { weatherForecast ->
 
 
-                weatherAdapter.submitList(fivedayForecastList)
-
-                //Set the current temperature in celsius for the TextView
-                val currentTempCelsius =
-                    currentConditions?.get(0)?.Temperature?.Metric?.Value?.toInt()
-                binding.cityTemperature.text = "$currentTempCelsius"
+            val sixdayForecastList = weatherForecast.daily.subList(1, 8)
+            val currentConditions = weatherForecast.current
 
 
-                binding.cityName.text = city.cityName
-                binding.currentConditionText.text = city.currentCondition?.get(0)?.WeatherText
-                binding.currentConditionText.isSelected = true
+            val mainIconToLoad = ICON_IDS.get(weatherForecast.current.weather.get(0).icon)
+            Log.i(TAG,"the id is ${weatherForecast.current.weather.get(0).icon}")
 
-            } else {
-                Log.i(TAG, "There is no city saved in the preferences. Go to the set Location screen")
-                weatherViewModel.goToSetLocationScreen()
-            }
+            Glide.with(binding.root)
+                .load(mainIconToLoad)
+                .into(binding.currentWeatherIcon)
+
+
+            binding.cityTemperature.text = "${currentConditions.temp.toInt()}"
+
+            val cityName = weatherForecast.cityName.split(',')
+            binding.maxDayTemp.text = "${weatherForecast.daily.get(0).temp.max.toInt().toString()}°"
+            binding.minDayTemp.text = "${weatherForecast.daily.get(0).temp.min.toInt().toString()}°"
+            binding.cityName.text = cityName.get(0)
+            binding.currentConditionText.text = weatherForecast.current.weather.get(0).description.capitalize()
+            binding.currentConditionText.isSelected = true
+            binding.perceivedTemp.text = "${weatherForecast.current.feels_like.toInt().toString()}°"
+            binding.uviLevel.text = weatherForecast.current.uvi.toInt().toString()
+            binding.humidity.text = "${weatherForecast.current.humidity.toString()}%"
+            binding.popPercentage.text = "${weatherForecast.daily.get(0).pop * 100 / 1} %"
+
+            weatherRecyclerView.adapter = WeatherRecyclerViewAdapter(sixdayForecastList)
+
+
+            val time = formattedTime(weatherForecast.current.sunrise, weatherForecast.timezone)
+
+            val hour = time.split(':').get(0).toInt()
+            val degrees = (hour * 360 / 12).toFloat()
+            val rotateAnimation = RotateAnimation(
+                0.0f, degrees,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                RotateAnimation.RELATIVE_TO_SELF, 1f
+            )
+            rotateAnimation.setFillAfter(true)
+            rotateAnimation.setDuration(2000)
+            rotateAnimation.setRepeatCount(0)
+            rotateAnimation.fillAfter = true
+            rotateAnimation.setInterpolator(LinearInterpolator())
+
+            rotateAnimation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(p0: Animation?) {
+                }
+
+                override fun onAnimationEnd(p0: Animation?) {
+
+                    //(x2,y2)=(x1+l⋅cos(a),y1+l⋅sin(a))
+                    binding.sunriseTime.visibility = View.VISIBLE
+
+                    binding.sunriseTime.text = time
+
+                }
+
+                override fun onAnimationRepeat(p0: Animation?) {
+                }
+
+            })
+            binding.sunriseLineImage.startAnimation(rotateAnimation)
+
 
         }
 
@@ -113,30 +168,30 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), Cli
     }
 
 
+    fun formattedTime(time: Long, zone: String, format: String = "HH:mm"): String {
+        // parse the time zone
+        val zoneId = ZoneId.of(zone)
+        // create a moment in time from the given timestamp (in seconds!)
+        val instant = Instant.ofEpochSecond(time)
+        // define a formatter using the given pattern and a Locale
+        val formatter = DateTimeFormatter.ofPattern(format, Locale.ITALIAN)
+        // then make the moment in time consider the zone and return the formatted String
+        return instant.atZone(zoneId).format(formatter)
+    }
+
+
     //This method is used to retrieve the city name from the location screen. The name is then sent to the viewmodel which will then connect to the API to
     //retrieve the weather forecasts
     private fun setBackStackEntryObserver() {
         val savedStateHandle = findNavController().currentBackStackEntry?.savedStateHandle
-        savedStateHandle?.getLiveData<City>(SearchWeatherFragment.KEY_CITY)
-            ?.observe(viewLifecycleOwner) { city ->
+        savedStateHandle?.getLiveData<CityNameAndCoordinates>(SearchWeatherFragment.KEY_CITY_FEATURE)
+            ?.observe(viewLifecycleOwner) { cityBasicInfo ->
 
-                weatherViewModel.checkTheReceivedCity(city)
+                weatherViewModel.requestWeatherForecastAndCurrentConditions(cityBasicInfo)
 
-                savedStateHandle.remove<String>(SearchWeatherFragment.KEY_CITY)
+                savedStateHandle.remove<String>(SearchWeatherFragment.KEY_CITY_FEATURE)
 
             }
-    }
-
-
-    //Callback from the recyclerview adapter:
-    // If the user clicks the last item of the list, scroll the view to the bottom so that the user can properly see all of the information
-    override fun scrollViewToLastItem() {
-        val adpter = weatherRecyclerView.adapter
-
-        if (adpter != null) {
-            val itemToScrollTo = adpter.itemCount - 1
-            weatherRecyclerView.scrollToPosition(itemToScrollTo)
-        }
     }
 
 

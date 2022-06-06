@@ -13,24 +13,25 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.leonardo.pani.weatherapp.R
 import com.leonardo.pani.weatherapp.databinding.SearchLayoutBinding
-import com.leonardo.pani.weatherapp.model.City
-import com.leonardo.pani.weatherapp.viewModel.SearchCityViewModel
+import com.leonardo.pani.weatherapp.model.CityNameAndCoordinates
+import com.leonardo.pani.weatherapp.model.Feature
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import java.lang.Exception
 
 
 @AndroidEntryPoint
-class SearchWeatherFragment : Fragment(R.layout.search_layout) , SearchItemClickListener {
+class SearchWeatherFragment : Fragment(R.layout.search_layout), SearchItemClickListener {
 
     val TAG = "SearchWeatherFragment"
 
 
     val searchViewModel: SearchCityViewModel by viewModels()
-    lateinit var imm : InputMethodManager
+    lateinit var imm: InputMethodManager
 
 
     companion object {
-        const val KEY_CITY = "com.leonardo.pani.weatherapp.view.citysearch.SearchWeatherFragment"
+        const val KEY_CITY_FEATURE = "com.leonardo.pani.weatherapp.view.citysearch.SearchWeatherFragment"
     }
 
 
@@ -66,10 +67,17 @@ class SearchWeatherFragment : Fragment(R.layout.search_layout) , SearchItemClick
 
                 override fun onQueryTextChange(newText: String?): Boolean {
 
+
                     if (newText != null) {
 
                         if (newText.length >= 3) {
-                            searchViewModel.search(newText)
+                            try {
+                                searchViewModel.search(newText)
+                            }catch (e: Exception) {
+                                Log.e(TAG,e.toString())
+                                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+
+                            }
                         } else if (newText.length < 3) {
                             searchAdapter.submitList(null)
                         }
@@ -84,15 +92,9 @@ class SearchWeatherFragment : Fragment(R.layout.search_layout) , SearchItemClick
         }
 
 
-        searchViewModel.searchResponse.observe(viewLifecycleOwner,{ listOfCities ->
-            /*if(listOfCities == null) {
-                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
-                findNavController().previousBackStackEntry?.savedStateHandle?.set(KEY_CITY,null)
-                findNavController().popBackStack()
+        searchViewModel.searchResponse.observe(viewLifecycleOwner, { listOfCities ->
 
-            } else {*/
             searchAdapter.submitList(listOfCities)
-            //}
         })
 
 
@@ -106,9 +108,15 @@ class SearchWeatherFragment : Fragment(R.layout.search_layout) , SearchItemClick
                 when (event) {
 
                     is SearchCityViewModel.CityChannel.ClickedCityName -> {
-                        Log.d(TAG,"clicked city, popping the previous fragment ")
+                        Log.d(TAG, "Clicked city, popping the previous fragment ")
                         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
-                        findNavController().previousBackStackEntry?.savedStateHandle?.set(KEY_CITY,event.city)
+
+                        val cityBasicInfo = CityNameAndCoordinates(event.cityFeature.geometry.coordinates,event.cityFeature.place_name)
+
+                            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                                KEY_CITY_FEATURE,
+                                cityBasicInfo
+                            )
                         findNavController().popBackStack()
                     }
 
@@ -128,10 +136,9 @@ class SearchWeatherFragment : Fragment(R.layout.search_layout) , SearchItemClick
     }
 
 
-    override fun onItemClicked(city: City) {
+    override fun onItemClicked(city: Feature) {
         searchViewModel.clickedCity(city)
     }
-
 
 
 }

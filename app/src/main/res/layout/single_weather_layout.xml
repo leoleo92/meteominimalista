@@ -5,27 +5,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="15dp"
-    android:layout_marginRight="15dp"
-    android:background="#00131313"
     android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/weather_icn_today"
-        android:layout_width="46dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/a1" />
+        android:layout_width="55dp"
+        android:layout_height="53dp"
+        app:layout_constraintEnd_toEndOf="@+id/day_of_the_week"
+        app:layout_constraintStart_toStartOf="@+id/day_of_the_week"
+        app:layout_constraintTop_toBottomOf="@+id/day_of_the_week"
+        app:srcCompat="@drawable/sunny_icn"
+        app:tint="#FFFFFF" />
 
     <TextView
         android:id="@+id/day_of_the_week"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:ellipsize="marquee"
         android:focusable="true"
@@ -39,126 +36,53 @@
         android:textColor="#FFFFFF"
         android:textSize="17dp"
         android:visibility="visible"
-        app:layout_constraintStart_toEndOf="@+id/weather_icn_today"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Oggi - Sereno" />
+        tools:text="Lun" />
 
     <TextView
-        android:id="@+id/temperature"
+        android:id="@+id/min_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="12dp"
         android:layout_weight="0"
         android:fontFamily="@font/bahnschrift"
+        android:padding="2dp"
         android:textAlignment="textEnd"
         android:textColor="#FFFFFF"
         android:textSize="17dp"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="17°/ 25°" />
+        app:layout_constraintEnd_toStartOf="@+id/max_temp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weather_icn_today"
+        tools:text="17°" />
+
+    <TextView
+        android:id="@+id/max_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="3dp"
+        android:layout_weight="0"
+        android:fontFamily="@font/bahnschrift"
+        android:padding="2dp"
+        android:textAlignment="textEnd"
+        android:textColor="#FFFFFF"
+        android:textSize="17dp"
+        android:visibility="visible"
+        app:layout_constraintRight_toLeftOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/weather_icn_today"
+        tools:text="17°" />
 
     <View
         android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/white"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weather_icn_today" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/details_container_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:visibility="gone"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="#81BFBBBB"
+        android:backgroundTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/divider">
-
-        <ImageView
-            android:id="@+id/night_weather_icn"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginEnd="16dp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/day_weather_icn"
-            app:srcCompat="@drawable/moderate_rain" />
-
-        <TextView
-            android:id="@+id/day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/bahnschrift"
-            android:text="Giorno"
-            android:textColor="#FFFFFF"
-            android:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/night_temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="175dp"
-            android:layout_marginTop="12dp"
-            android:fontFamily="@font/bahnschrift"
-            android:textColor="#FFFFFF"
-            android:visibility="visible"
-            app:layout_constraintStart_toEndOf="@+id/night"
-            app:layout_constraintTop_toBottomOf="@+id/day_temp"
-            tools:text="5°" />
-
-        <TextView
-            android:id="@+id/day_temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="165dp"
-            android:layout_marginTop="18dp"
-            android:fontFamily="@font/bahnschrift"
-            android:textColor="#FFFFFF"
-            android:visibility="visible"
-            app:layout_constraintStart_toEndOf="@+id/day"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="11°" />
-
-        <TextView
-            android:id="@+id/night"
-            android:layout_width="wrap_content"
-            android:layout_height="19dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/bahnschrift"
-            android:text="Notte"
-            android:textColor="#FFFFFF"
-            android:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/day" />
-
-        <ImageView
-            android:id="@+id/day_weather_icn"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="16dp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/moderate_rain" />
-
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/circle"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
