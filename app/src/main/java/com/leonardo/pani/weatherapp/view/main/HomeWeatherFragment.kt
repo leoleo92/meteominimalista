@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide
 import com.leonardo.pani.weatherapp.R
 import com.leonardo.pani.weatherapp.databinding.HomeWeatherScreenFragmentBinding
 import com.leonardo.pani.weatherapp.model.CityNameAndCoordinates
-import com.leonardo.pani.weatherapp.utils.Consts.ICON_IDS
+import com.leonardo.pani.weatherapp.utils.Consts.ICON_IDS_CURRENT_WEATHER_API
 import com.leonardo.pani.weatherapp.view.citysearch.SearchWeatherFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
@@ -66,7 +66,7 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment) {
 
             searchCityIcn.setOnClickListener {
 
-                //weatherViewModel.goToSetLocationScreen()
+                weatherViewModel.goToSearchCityFragment()
 
             }
 
@@ -77,11 +77,12 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment) {
         weatherViewModel.weatherResponse.observe(viewLifecycleOwner) { weatherForecast ->
 
 
-            val sixdayForecastList = weatherForecast.daily.subList(1, 8)
+
             val currentConditions = weatherForecast.current
+            val sevenDaysForecast = weatherForecast.daysForecast
 
 
-            val mainIconToLoad = ICON_IDS.get(weatherForecast.current.weather.get(0).icon)
+            val mainIconToLoad = ICON_IDS_CURRENT_WEATHER_API.get(weatherForecast.current.weather.get(0).icon)
             Log.i(TAG,"the id is ${weatherForecast.current.weather.get(0).icon}")
 
             Glide.with(binding.root)
@@ -102,7 +103,9 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment) {
             binding.humidity.text = "${weatherForecast.current.humidity.toString()}%"
             binding.popPercentage.text = "${weatherForecast.daily.get(0).pop * 100 / 1} %"
 
-            weatherRecyclerView.adapter = WeatherRecyclerViewAdapter(sixdayForecastList)
+            if(sevenDaysForecast != null) {
+                weatherRecyclerView.adapter = WeatherRecyclerViewAdapter(sevenDaysForecast)
+            }
 
 
             val time = formattedTime(weatherForecast.current.sunrise, weatherForecast.timezone)
@@ -159,6 +162,8 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment) {
                             HomeWeatherFragmentDirections.actionHomeWeatherFragmentToErrorPage()
                         findNavController().navigate(action)
                     }
+
+
 
 
                 }

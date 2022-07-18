@@ -1,6 +1,6 @@
-package com.leonardo.pani.weatherapp.model
+package com.leonardo.pani.weatherapp.model.jsonGenerated
 
-data class WeatherXX(
+data class Weather(
     val description: String,
     val icon: String,
     val id: Int,

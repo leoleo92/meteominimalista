@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_homeWeatherFragment_to_errorPage"
             app:destination="@id/errorPage" />
+        <action
+            android:id="@+id/action_homeWeatherFragment_to_detailedFragment"
+            app:destination="@id/detailedFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchWeatherFragment"
@@ -36,4 +39,9 @@
         android:name="com.leonardo.pani.weatherapp.view.ErrorPage"
         android:label="ErrorPage"
         tools:layout="@layout/error_page_layout"/>
+    <fragment
+        android:id="@+id/detailedFragment"
+        android:name="com.leonardo.pani.weatherapp.DetailedFragment"
+        android:label="fragment_detailed"
+        tools:layout="@layout/fragment_detailed" />
 </navigation>

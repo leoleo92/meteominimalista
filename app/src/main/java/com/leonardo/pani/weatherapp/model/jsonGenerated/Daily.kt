@@ -1,4 +1,4 @@
-package com.leonardo.pani.weatherapp.model
+package com.leonardo.pani.weatherapp.model.jsonGenerated
 
 data class Daily(
     val clouds: Int,

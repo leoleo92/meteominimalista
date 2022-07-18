@@ -4,10 +4,8 @@ import com.leonardo.pani.weatherapp.R
 
 object Consts {
 
-    const val BASE_URL = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
-    const val MAP_BOX_TOKEN = "pk.eyJ1IjoibGlvbmFwcCIsImEiOiJjbDJqdmJnNTEwajZ4M2ZzM3pzeXAxZXljIn0.6p9_7IB77CwPeb2NxrNdrg"
 
-    val ICON_IDS = mapOf(
+    val ICON_IDS_CURRENT_WEATHER_API = mapOf(
         "01d" to R.drawable.sunny_icn,
         "02d" to R.drawable.sunny_clouds,
         "03d" to R.drawable.cloudy,
@@ -19,7 +17,7 @@ object Consts {
         "50d" to R.drawable.fog,
         "01n" to R.drawable.moon,
         "02n" to R.drawable.moon_cloud,
-        "03" to R.drawable.cloudy,
+        "03n" to R.drawable.cloudy,
         "04n" to R.drawable.very_cloudy,
         "09n" to R.drawable.rainy,
         "10n" to R.drawable.rainy_sun,
@@ -28,5 +26,36 @@ object Consts {
         "50n" to R.drawable.fog
     )
 
+    val ICON_IDS_7_DAYS_FORECAST_API = mapOf(
+        "0" to R.drawable.sunny_icn,
+        "1" to R.drawable.sunny_clouds,
+        "2" to R.drawable.sunny_clouds,
+        "3" to R.drawable.sunny_clouds,
+        "45" to R.drawable.fog,
+        "48" to R.drawable.fog,
+        "51" to R.drawable.rainy,
+        "53" to R.drawable.rainy,
+        "55" to R.drawable.rainy,
+        "56" to R.drawable.rainy,
+        "57" to R.drawable.rainy,
+        "61" to R.drawable.rainy,
+        "63" to R.drawable.rainy,
+        "65" to R.drawable.rainy,
+        "66" to R.drawable.rainy,
+        "67" to R.drawable.rainy,
+        "71" to R.drawable.snowy,
+        "73" to R.drawable.snowy,
+        "75" to R.drawable.snowy,
+        "77" to R.drawable.snowy,
+        "80" to R.drawable.rainy,
+        "81" to R.drawable.rainy,
+        "82" to R.drawable.rainy,
+        "85" to R.drawable.snowy,
+        "86" to R.drawable.snowy,
+        "95" to R.drawable.thunder,
+        "96" to R.drawable.thunder,
+        "99" to R.drawable.thunder,
+
+        )
 
 }

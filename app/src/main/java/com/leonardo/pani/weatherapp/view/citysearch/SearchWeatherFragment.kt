@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.leonardo.pani.weatherapp.R
 import com.leonardo.pani.weatherapp.databinding.SearchLayoutBinding
 import com.leonardo.pani.weatherapp.model.CityNameAndCoordinates
-import com.leonardo.pani.weatherapp.model.Feature
+import com.leonardo.pani.weatherapp.model.jsonGenerated.Feature
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import java.lang.Exception

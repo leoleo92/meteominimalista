@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.leonardo.pani.weatherapp.databinding.CityLocationListItemBinding
-import com.leonardo.pani.weatherapp.model.Feature
+import com.leonardo.pani.weatherapp.model.jsonGenerated.Feature
 
 class SearchWeatherAdapter(val listener: SearchItemClickListener): ListAdapter<Feature, SearchWeatherAdapter.SearchViewHolder>(
     DiffCallBack()

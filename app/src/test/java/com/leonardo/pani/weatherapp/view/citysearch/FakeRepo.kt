@@ -1,7 +1,7 @@
 package com.leonardo.pani.weatherapp.view.citysearch
 
 import com.leonardo.pani.weatherapp.api.SearchPlaceApi
-import com.leonardo.pani.weatherapp.model.CitiesList
+import com.leonardo.pani.weatherapp.model.jsonGenerated.CitiesList
 import com.leonardo.pani.weatherapp.repo.RepoInterface
 import retrofit2.Response
 

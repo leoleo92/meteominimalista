@@ -2,10 +2,10 @@ package com.leonardo.pani.weatherapp.view.citysearch
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.leonardo.pani.weatherapp.model.CitiesList
-import com.leonardo.pani.weatherapp.model.Feature
-import com.leonardo.pani.weatherapp.model.Geometry
-import com.leonardo.pani.weatherapp.model.Properties
+import com.leonardo.pani.weatherapp.model.jsonGenerated.CitiesList
+import com.leonardo.pani.weatherapp.model.jsonGenerated.Feature
+import com.leonardo.pani.weatherapp.model.jsonGenerated.Geometry
+import com.leonardo.pani.weatherapp.model.jsonGenerated.Properties
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody

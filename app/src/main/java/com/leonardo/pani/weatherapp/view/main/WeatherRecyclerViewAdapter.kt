@@ -1,30 +1,26 @@
 package com.leonardo.pani.weatherapp.view.main
 
-import android.animation.LayoutTransition
-import android.transition.AutoTransition
-import android.transition.TransitionManager
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.leonardo.pani.weatherapp.databinding.SingleWeatherLayoutBinding
-import com.leonardo.pani.weatherapp.model.Daily
+import com.leonardo.pani.weatherapp.model.DailyConditions
+import com.leonardo.pani.weatherapp.model.jsonGenerated.Daily
 import com.leonardo.pani.weatherapp.utils.Consts
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WeatherRecyclerViewAdapter(val dailyForecasts: List<Daily>) :
+class WeatherRecyclerViewAdapter(val dailyForecasts: List<DailyConditions>) :
     RecyclerView.Adapter<WeatherRecyclerViewAdapter.WeatherViewHolder>() {
 
     inner class WeatherViewHolder(private val binding: SingleWeatherLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(item: Daily) {
+        fun bind(item: DailyConditions) {
 
 
             binding.apply {
@@ -33,13 +29,16 @@ class WeatherRecyclerViewAdapter(val dailyForecasts: List<Daily>) :
 
 
                 //val format1 = SimpleDateFormat("yyyy-MM-dd")
+                val  inputFormat =  SimpleDateFormat("yyyy-MM-dd",Locale.US)
+                val date = inputFormat.parse(item.previewWeatherConditions.date)
                 val dateDay =
-                    SimpleDateFormat("EEEE", Locale.ITALIAN).format(item.dt * 1000).substring(0, 3)
+                    SimpleDateFormat("EEEE", Locale.ITALIAN).format(date).substring(0, 3)
                 Log.i("WeatherRecyclerViewAdapter", dateDay)
 
 
                 dayOfTheWeek.text = dateDay
-                val mainIconToLoad = Consts.ICON_IDS.get(item.weather.get(0).icon)
+
+                val mainIconToLoad = Consts.ICON_IDS_7_DAYS_FORECAST_API[item.previewWeatherConditions.weather.toString()]
 
                 Glide.with(binding.root)
                     .load(mainIconToLoad)
@@ -53,10 +52,10 @@ class WeatherRecyclerViewAdapter(val dailyForecasts: List<Daily>) :
 
                 //Detailed info
                 //Day
-                maxTemp.text = "${item.temp.max.toInt()}°"
+                maxTemp.text = "${item.previewWeatherConditions.maxTemp}°"
 
                 //Night
-                minTemp.text = "${item.temp.min.toInt()}°"
+                minTemp.text = "${item.previewWeatherConditions.minTemp}°"
 
 
             }
@@ -79,7 +78,8 @@ class WeatherRecyclerViewAdapter(val dailyForecasts: List<Daily>) :
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-        val currentForecast = dailyForecasts.get(position)
+        val currentForecast = dailyForecasts?.get(position)
+        if(currentForecast != null)
         holder.bind(currentForecast)
     }
 
@@ -100,6 +100,7 @@ class WeatherRecyclerViewAdapter(val dailyForecasts: List<Daily>) :
         ((celsiusTemp - 32) * (5.0 / 9.0)).toInt()
 
     override fun getItemCount(): Int {
+
         return dailyForecasts.size
     }
 
