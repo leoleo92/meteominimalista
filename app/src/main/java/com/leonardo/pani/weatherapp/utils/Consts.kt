@@ -58,4 +58,37 @@ object Consts {
 
         )
 
+
+    val CODE_TO_ITA_DESCRIPTION = mapOf(
+        "0" to "Soleggiato",
+        "1" to "In parte soleggiato",
+        "2" to "In parte nuvoloso",
+        "3" to "Nuvoloso",
+        "45" to "Nebbia",
+        "46" to "Nebbia",
+        "51" to "Pioggerella",
+        "53" to "Pioggia moderata",
+        "55" to "Pioggia intensa",
+        "56" to "Pioggia gelida",
+        "57" to "Pioggia gelida intensa",
+        "61" to "Pioggia",
+        "63" to "Pioggia moderata",
+        "65" to "Acquazzone",
+        "66" to "Pioggia gelata",
+        "67" to "Pioggia gelida intensa",
+        "71" to "Neve leggera",
+        "73" to "Neve moderata",
+        "75" to "Bufera di neve",
+        "77" to "Nevischio",
+        "80" to "Breve acquazzone",
+        "81" to "Acquazzone",
+        "82" to "Bombe d'acqua",
+        "85" to "Nevicata",
+        "86" to "Intensa nevicata",
+        "95" to "Temporali e grandine",
+        "96" to "Grandinata"
+
+
+
+    )
 }

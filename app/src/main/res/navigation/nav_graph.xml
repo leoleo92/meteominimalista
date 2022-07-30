@@ -12,23 +12,29 @@
         <action
             android:id="@+id/action_homeWeatherFragment_to_searchWeatherFragment"
             app:destination="@id/searchWeatherFragment"
-            app:enterAnim="@anim/circle_explosion_anim"
-        />
-        <!--app:popUpTo="@+id/firstFragment"-->
+            app:enterAnim="@anim/enter_anim_search_layout"
+            app:exitAnim="@anim/exit_anim_home_layout"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/re_enter_home_anim_layout"
+            app:popExitAnim="@anim/exit_anim_earch_layout" />
 
         <action
             android:id="@+id/action_homeWeatherFragment_to_errorPage"
             app:destination="@id/errorPage" />
         <action
+
             android:id="@+id/action_homeWeatherFragment_to_detailedFragment"
-            app:destination="@id/detailedFragment" />
+            app:destination="@id/detailedFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/pop_in_anim"
+            app:popExitAnim="@anim/pop_out_anim" />
     </fragment>
     <fragment
         android:id="@+id/searchWeatherFragment"
         android:name="com.leonardo.pani.weatherapp.view.citysearch.SearchWeatherFragment"
         android:label="search_layout"
         tools:layout="@layout/search_layout"
-        app:popUpTo="@+id/homeWeatherFragment"
 >
         <action
             android:id="@+id/action_searchWeatherFragment_to_errorPage"
@@ -41,7 +47,14 @@
         tools:layout="@layout/error_page_layout"/>
     <fragment
         android:id="@+id/detailedFragment"
-        android:name="com.leonardo.pani.weatherapp.DetailedFragment"
-        android:label="fragment_detailed"
-        tools:layout="@layout/fragment_detailed" />
+        android:name="com.leonardo.pani.weatherapp.view.weather_Detail.DetailedFragment"
+        android:label="fragmentDetailed"
+        app:popUpToInclusive="true"
+        app:popUpTo="@+id/homeWeatherFragment">
+        <argument
+            android:name="daily_condition_args"
+            app:argType="com.leonardo.pani.weatherapp.model.DailyConditions" />
+
+    </fragment>
+
 </navigation>

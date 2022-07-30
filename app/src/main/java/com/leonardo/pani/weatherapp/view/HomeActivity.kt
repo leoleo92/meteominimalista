@@ -21,6 +21,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
 
+        Log.i("HomeActivity","Homeactivity created")
+
 
         //Check if the User is connected to Internet
         if(isOnline(applicationContext)) {
@@ -70,4 +72,10 @@ class HomeActivity : AppCompatActivity() {
         return false
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("HomeActivity","Homeactivity resumed")
+
+    }
 }

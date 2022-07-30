@@ -16,11 +16,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+ const val SAVED_WEATHER = "saved_weather_forecast"
+
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val repo: RepoInterface,
-    private val dataStore: DataStoreManager
+    private val dataStore: DataStoreManager,
+    val state: SavedStateHandle
 ) : ViewModel() {
 
 
@@ -70,9 +73,9 @@ class WeatherViewModel @Inject constructor(
             memorizeCity(basicInfo)
 
 
-
             //7 days conditions
-            val dailyForecastsResponse = repo.getDailyForecasta(cityLatAndLong = basicInfo.coordinates)
+            val dailyForecastsResponse =
+                repo.getDailyForecasta(cityLatAndLong = basicInfo.coordinates)
             val dailyForecastsContent = dailyForecastsResponse.body()
 
             val dailyConditions = mutableListOf<DailyConditions>()
@@ -83,22 +86,19 @@ class WeatherViewModel @Inject constructor(
 
                 dailyForecastsContent.run {
 
+
+
                     var hoursStartIndex = 0
                     var hoursEndIndex = 23
-
-
                     for (i in 0..6) {
 
                         //Preview infos
                         val date = this?.daily?.time?.get(i)
-                        Log.i("WeatherviewModel", "The weather code is ${this?.daily?.weathercode?.get(i)}")
-
                         val weather = this?.daily?.weathercode?.get(i)
-
                         val maxTemp = this?.daily?.temperature_2m_max?.get(i)
                         val minTemp = this?.daily?.temperature_2m_min?.get(i)
                         val sunriseTime = this?.daily?.sunrise?.get(i)?.substring(11, 16)
-                        val sunsetTime = this?.daily?.sunrise?.get(i)?.substring(11, 16)
+                        val sunsetTime = this?.daily?.sunset?.get(i)?.substring(11, 16)
 
                         val previewWeatherConditions = PreviewConditions(
                             date,
@@ -112,16 +112,21 @@ class WeatherViewModel @Inject constructor(
                         val hoursConditions = mutableListOf<HourlyConditions>()
 
 
+
                         //Detailed
                         for (j in hoursStartIndex..hoursEndIndex) {
 
+                            val hour = this?.hourly?.time?.get(j)?.substring(11, 16)
                             val temperature = this?.hourly?.temperature_2m?.get(j)
                             val feelsLikeTemp = this?.hourly?.apparent_temperature?.get(j)
                             val weatherCondition = this?.hourly?.weathercode?.get(j)
                             val precipitation = this?.hourly?.precipitation?.get(j)
 
+
+
                             hoursConditions.add(
                                 HourlyConditions(
+                                    hour,
                                     temperature,
                                     feelsLikeTemp,
                                     weatherCondition,
@@ -141,7 +146,7 @@ class WeatherViewModel @Inject constructor(
                         hoursStartIndex += 24
                         hoursEndIndex += 24
 
-                        if(hoursEndIndex > 169) {
+                        if (hoursEndIndex >= 168) {
                             break
                         }
                     }
@@ -161,13 +166,18 @@ class WeatherViewModel @Inject constructor(
                 Log.i("WeatherViewModel", "weatehr info: $forecast")
 
 
-                //It's important to copy the result fromm the first api so that we can send all of the info to the _response and hence to the fragment
+
+                val finalWeatherForecast = forecast?.copy(
+                    coordinates = basicInfo.coordinates,
+                    cityName = basicInfo.cityName,
+                    daysForecast = dailyConditions
+                )
+
+                state.set(SAVED_WEATHER, finalWeatherForecast)
+
+                //It's important to copy the result from the first api so that we can send all of the info to the _response and hence to the fragment
                 _response.sendAction(
-                    forecast?.copy(
-                        coordinates = basicInfo.coordinates,
-                        cityName = basicInfo.cityName,
-                        daysForecast = dailyConditions
-                    )!!
+                    finalWeatherForecast!!
                 )
             } else {
                 weatherChannel.send(WeatherUseCases.NavigateToTheErrorPage())
@@ -176,9 +186,17 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
+    fun clickedADay(day: DailyConditions) {
+
+        viewModelScope.launch {
+            weatherChannel.send(WeatherUseCases.NavigateToDetailWeatherScreen(day))
+        }
+    }
+
     sealed class WeatherUseCases {
 
         class NavigateToSetLocationScreen : WeatherUseCases()
+        class NavigateToDetailWeatherScreen(val day: DailyConditions) : WeatherUseCases()
         class NavigateToTheErrorPage : WeatherUseCases()
 
     }

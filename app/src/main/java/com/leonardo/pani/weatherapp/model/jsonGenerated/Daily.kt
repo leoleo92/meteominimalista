@@ -1,5 +1,9 @@
 package com.leonardo.pani.weatherapp.model.jsonGenerated
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Daily(
     val clouds: Int,
     val dew_point: Double,
@@ -19,4 +23,4 @@ data class Daily(
     val wind_deg: Int,
     val wind_gust: Double,
     val wind_speed: Double
-)
+) : Parcelable

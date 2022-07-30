@@ -2,12 +2,18 @@ package com.leonardo.pani.weatherapp.view.main
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,8 +22,11 @@ import com.bumptech.glide.Glide
 import com.leonardo.pani.weatherapp.R
 import com.leonardo.pani.weatherapp.databinding.HomeWeatherScreenFragmentBinding
 import com.leonardo.pani.weatherapp.model.CityNameAndCoordinates
+import com.leonardo.pani.weatherapp.model.DailyConditions
+import com.leonardo.pani.weatherapp.model.jsonGenerated.WeatherForecast
 import com.leonardo.pani.weatherapp.utils.Consts.ICON_IDS_CURRENT_WEATHER_API
 import com.leonardo.pani.weatherapp.view.citysearch.SearchWeatherFragment
+import com.leonardo.pani.weatherapp.view.weather_Detail.DetailedFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
 import java.time.ZoneId
@@ -28,25 +37,24 @@ import java.util.*
 const val TAG = "HomeWeatherFragment"
 
 
-
 @AndroidEntryPoint
-class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment) {
+class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnDayClickedListener {
 
-    val weatherViewModel: WeatherViewModel by viewModels()
     private lateinit var weatherRecyclerView: RecyclerView
+    private lateinit var binding: HomeWeatherScreenFragmentBinding
 
+    private val weatherViewModel: WeatherViewModel by lazy {
+        ViewModelProvider(this).get(WeatherViewModel::class.java)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding = HomeWeatherScreenFragmentBinding.bind(view)
 
         setBackStackEntryObserver()
 
 
-        val binding = HomeWeatherScreenFragmentBinding.bind(view)
-
-
-        //Set the widgets
+        //Set the recyclerview
         binding.apply {
 
             weatherRecyclerView = recyclerView
@@ -73,75 +81,9 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment) {
         }
 
 
-        //This retrieve the Five day forecast list and the current conditions of the city
+        //This retrieve the forecasts list and the current conditions of the city and sets the various fragment's widget with the retrieved information
         weatherViewModel.weatherResponse.observe(viewLifecycleOwner) { weatherForecast ->
-
-
-
-            val currentConditions = weatherForecast.current
-            val sevenDaysForecast = weatherForecast.daysForecast
-
-
-            val mainIconToLoad = ICON_IDS_CURRENT_WEATHER_API.get(weatherForecast.current.weather.get(0).icon)
-            Log.i(TAG,"the id is ${weatherForecast.current.weather.get(0).icon}")
-
-            Glide.with(binding.root)
-                .load(mainIconToLoad)
-                .into(binding.currentWeatherIcon)
-
-
-            binding.cityTemperature.text = "${currentConditions.temp.toInt()}"
-
-            val cityName = weatherForecast.cityName.split(',')
-            binding.maxDayTemp.text = "${weatherForecast.daily.get(0).temp.max.toInt().toString()}°"
-            binding.minDayTemp.text = "${weatherForecast.daily.get(0).temp.min.toInt().toString()}°"
-            binding.cityName.text = cityName.get(0)
-            binding.currentConditionText.text = weatherForecast.current.weather.get(0).description.capitalize()
-            binding.currentConditionText.isSelected = true
-            binding.perceivedTemp.text = "${weatherForecast.current.feels_like.toInt().toString()}°"
-            binding.uviLevel.text = weatherForecast.current.uvi.toInt().toString()
-            binding.humidity.text = "${weatherForecast.current.humidity.toString()}%"
-            binding.popPercentage.text = "${weatherForecast.daily.get(0).pop * 100 / 1} %"
-
-            if(sevenDaysForecast != null) {
-                weatherRecyclerView.adapter = WeatherRecyclerViewAdapter(sevenDaysForecast)
-            }
-
-
-            val time = formattedTime(weatherForecast.current.sunrise, weatherForecast.timezone)
-
-            val hour = time.split(':').get(0).toInt()
-            val degrees = (hour * 360 / 12).toFloat()
-            val rotateAnimation = RotateAnimation(
-                0.0f, degrees,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                RotateAnimation.RELATIVE_TO_SELF, 1f
-            )
-            rotateAnimation.setFillAfter(true)
-            rotateAnimation.setDuration(2000)
-            rotateAnimation.setRepeatCount(0)
-            rotateAnimation.fillAfter = true
-            rotateAnimation.setInterpolator(LinearInterpolator())
-
-            rotateAnimation.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(p0: Animation?) {
-                }
-
-                override fun onAnimationEnd(p0: Animation?) {
-
-                    //(x2,y2)=(x1+l⋅cos(a),y1+l⋅sin(a))
-                    binding.sunriseTime.visibility = View.VISIBLE
-
-                    binding.sunriseTime.text = time
-
-                }
-
-                override fun onAnimationRepeat(p0: Animation?) {
-                }
-
-            })
-            binding.sunriseLineImage.startAnimation(rotateAnimation)
-
+            setTheView(binding, weatherForecast)
 
         }
 
@@ -154,7 +96,19 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment) {
                     is WeatherViewModel.WeatherUseCases.NavigateToSetLocationScreen -> {
                         val action =
                             HomeWeatherFragmentDirections.actionHomeWeatherFragmentToSearchWeatherFragment()
+                        //findNavController().graph.setStartDestination(R.id.homeWeatherFragment) // Little bit tricky solution :)
                         findNavController().navigate(action)
+                    }
+
+
+                    is WeatherViewModel.WeatherUseCases.NavigateToDetailWeatherScreen -> {
+                        val action =
+                            HomeWeatherFragmentDirections.actionHomeWeatherFragmentToDetailedFragment(
+                                event.day
+                            )
+                        //findNavController().saveState()
+                        findNavController().navigate(action)
+
                     }
 
                     is WeatherViewModel.WeatherUseCases.NavigateToTheErrorPage -> {
@@ -164,14 +118,115 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment) {
                     }
 
 
-
-
                 }
             }
         }
 
+
     }
 
+
+    fun setTheView(
+        binding: HomeWeatherScreenFragmentBinding,
+        weatherForecast: WeatherForecast,
+        playAnimation: Boolean = true
+    ) {
+
+        val currentConditions = weatherForecast.current
+        val sevenDaysForecast = weatherForecast.daysForecast
+        weatherRecyclerView = binding.recyclerView
+
+        if (sevenDaysForecast != null) {
+            weatherRecyclerView.adapter = WeatherRecyclerViewAdapter(this, sevenDaysForecast)
+        }
+
+        binding.apply {
+
+
+            val mainIconToLoad =
+                ICON_IDS_CURRENT_WEATHER_API.get(weatherForecast.current.weather.get(0).icon)
+
+            Glide.with(root)
+                .load(mainIconToLoad)
+                .into(currentWeatherIcon)
+
+
+
+
+
+
+            recyclerView.apply {
+
+                val ltManager = LinearLayoutManager(context)
+                ltManager.orientation = RecyclerView.HORIZONTAL
+
+                layoutManager = ltManager
+
+                setHasFixedSize(true)
+
+
+            }
+
+            searchCityIcn.setOnClickListener {
+
+                weatherViewModel.goToSearchCityFragment()
+
+            }
+
+
+            binding.cityTemperature.text = "${currentConditions.temp.toInt()}"
+
+            val name = weatherForecast.cityName.split(',')
+            maxDayTemp.text = "${weatherForecast.daily.get(0).temp.max.toInt().toString()}°"
+            minDayTemp.text = "${weatherForecast.daily.get(0).temp.min.toInt().toString()}°"
+            cityName.text = name.get(0)
+            currentConditionText.text =
+                weatherForecast.current.weather.get(0).description.capitalize()
+            currentConditionText.isSelected = true
+            perceivedTemp.text = "${weatherForecast.current.feels_like.toInt().toString()}°"
+            uviLevel.text = weatherForecast.current.uvi.toInt().toString()
+            humidity.text = "${weatherForecast.current.humidity.toString()}%"
+            popPercentage.text = "${(weatherForecast.daily.get(0).pop * 100 / 1).toInt()} %"
+
+
+            val time = formattedTime(weatherForecast.current.sunrise, weatherForecast.timezone)
+
+
+            val animationDuration = if (playAnimation) 2000L else 0
+
+            val hour = time.split(':').get(0).toInt()
+            val degrees = (hour * 360 / 12).toFloat()
+            val rotateAnimation = RotateAnimation(
+                0.0f, degrees,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                RotateAnimation.RELATIVE_TO_SELF, 1f
+            )
+            rotateAnimation.setFillAfter(true)
+            rotateAnimation.setDuration(animationDuration)
+            rotateAnimation.setRepeatCount(0)
+            rotateAnimation.fillAfter = true
+            rotateAnimation.setInterpolator(LinearInterpolator())
+
+            rotateAnimation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(p0: Animation?) {
+                }
+
+                override fun onAnimationEnd(p0: Animation?) {
+
+                    //(x2,y2)=(x1+l⋅cos(a),y1+l⋅sin(a))
+                    sunriseTime.visibility = View.VISIBLE
+
+                    sunriseTime.text = time
+
+                }
+
+                override fun onAnimationRepeat(p0: Animation?) {
+                }
+
+            })
+            sunriseLineImage.startAnimation(rotateAnimation)
+        }
+    }
 
     fun formattedTime(time: Long, zone: String, format: String = "HH:mm"): String {
         // parse the time zone
@@ -197,6 +252,23 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment) {
                 savedStateHandle.remove<String>(SearchWeatherFragment.KEY_CITY_FEATURE)
 
             }
+    }
+
+    override fun onDayClicked(day: DailyConditions) {
+
+        weatherViewModel.clickedADay(day)
+
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        Log.i(TAG, "The savedstate is ${weatherViewModel.state}")
+
+        if (!weatherViewModel.state.keys().isEmpty()) {
+            Log.i(TAG, "The savedstate is not null")
+            setTheView(binding, weatherViewModel.state.get(SAVED_WEATHER)!!, false)
+        }
     }
 
 

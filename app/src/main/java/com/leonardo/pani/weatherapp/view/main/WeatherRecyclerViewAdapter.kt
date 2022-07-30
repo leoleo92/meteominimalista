@@ -13,7 +13,7 @@ import com.leonardo.pani.weatherapp.utils.Consts
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WeatherRecyclerViewAdapter(val dailyForecasts: List<DailyConditions>) :
+class WeatherRecyclerViewAdapter(val onDayClicklistener: OnDayClickedListener, val dailyForecasts: List<DailyConditions>) :
     RecyclerView.Adapter<WeatherRecyclerViewAdapter.WeatherViewHolder>() {
 
     inner class WeatherViewHolder(private val binding: SingleWeatherLayoutBinding) :
@@ -26,14 +26,11 @@ class WeatherRecyclerViewAdapter(val dailyForecasts: List<DailyConditions>) :
             binding.apply {
 
 
-
-
                 //val format1 = SimpleDateFormat("yyyy-MM-dd")
                 val  inputFormat =  SimpleDateFormat("yyyy-MM-dd",Locale.US)
                 val date = inputFormat.parse(item.previewWeatherConditions.date)
                 val dateDay =
                     SimpleDateFormat("EEEE", Locale.ITALIAN).format(date).substring(0, 3)
-                Log.i("WeatherRecyclerViewAdapter", dateDay)
 
 
                 dayOfTheWeek.text = dateDay
@@ -43,11 +40,6 @@ class WeatherRecyclerViewAdapter(val dailyForecasts: List<DailyConditions>) :
                 Glide.with(binding.root)
                     .load(mainIconToLoad)
                     .into(binding.weatherIcnToday)
-                /*val iconNumberDay = Consts.ICON_MAP.get(item.Day.Icon)
-                //Glide.with(binding.root).load(iconNumberDay).into(dayWeatherIcn)
-               // val iconNumberNight = Consts.ICON_MAP.get(item.Night.Icon)
-                Glide.with(binding.root).load(iconNumberNight).into(nightWeatherIcn)
-                Glide.with(binding.root).load(iconNumberDay).into(weatherIcnToday)*/
 
 
                 //Detailed info
@@ -58,7 +50,12 @@ class WeatherRecyclerViewAdapter(val dailyForecasts: List<DailyConditions>) :
                 minTemp.text = "${item.previewWeatherConditions.minTemp}°"
 
 
+                root.setOnClickListener {
+                    onDayClicklistener.onDayClicked(item)
+                }
+
             }
+
         }
 
 

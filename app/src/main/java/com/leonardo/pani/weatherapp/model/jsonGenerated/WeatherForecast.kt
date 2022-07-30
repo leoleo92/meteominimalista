@@ -1,8 +1,11 @@
 package com.leonardo.pani.weatherapp.model.jsonGenerated
 
+import android.os.Parcelable
 import com.leonardo.pani.weatherapp.model.DailyConditions
+import kotlinx.android.parcel.Parcelize
 
-data class WeatherForecast(
+@Parcelize
+data class WeatherForecast (
     var cityName: String,
     var coordinates: List<Double>,
     val current: Current,
@@ -13,4 +16,4 @@ data class WeatherForecast(
     val timezone: String,
     val timezone_offset: Int,
     var daysForecast: List<DailyConditions>?
-)
+): Parcelable

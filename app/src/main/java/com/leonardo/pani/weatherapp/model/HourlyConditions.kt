@@ -1,5 +1,7 @@
 package com.leonardo.pani.weatherapp.model
 
-class HourlyConditions(temperature: Double?, feelsLikeTemp: Double?, weatherCondition: Int?, precipitation: Double?) {
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-}
+@Parcelize
+data class HourlyConditions(val hour: String?,val temperature: Double?, val feelsLikeTemp: Double?, val weatherCondition: Int?,val precipitation: Double?) : Parcelable
