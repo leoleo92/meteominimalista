@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeWeatherFragment">
+    app:startDestination="@id/splashScreenFragment">
     <fragment
         android:id="@+id/homeWeatherFragment"
         android:name="com.leonardo.pani.weatherapp.view.main.HomeWeatherFragment"
@@ -55,6 +55,20 @@
             android:name="daily_condition_args"
             app:argType="com.leonardo.pani.weatherapp.model.DailyConditions" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.leonardo.pani.weatherapp.view.SplashScreenFragment"
+        android:label="SplashScreenFragment" >
+        <action
+            android:id="@+id/action_splashScreenFragment_to_homeWeatherFragment"
+            app:destination="@id/homeWeatherFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@anim/pop_in_anim"
+            app:popExitAnim="@anim/pop_out_anim"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

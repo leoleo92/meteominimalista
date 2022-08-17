@@ -1,13 +1,19 @@
 package com.leonardo.pani.weatherapp.view.main
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.activityViewModels
@@ -20,7 +26,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.leonardo.pani.weatherapp.R
+import com.leonardo.pani.weatherapp.databinding.HomeAcitivityBinding
 import com.leonardo.pani.weatherapp.databinding.HomeWeatherScreenFragmentBinding
+import com.leonardo.pani.weatherapp.databinding.SplashScreenBinding
 import com.leonardo.pani.weatherapp.model.CityNameAndCoordinates
 import com.leonardo.pani.weatherapp.model.DailyConditions
 import com.leonardo.pani.weatherapp.model.jsonGenerated.WeatherForecast
@@ -47,12 +55,16 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnD
         ViewModelProvider(this).get(WeatherViewModel::class.java)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = HomeWeatherScreenFragmentBinding.bind(view)
 
+        showSystemUI(binding)
+
         setBackStackEntryObserver()
 
+        resources.configuration.orientation
 
         //Set the recyclerview
         binding.apply {
@@ -153,8 +165,6 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnD
 
 
 
-
-
             recyclerView.apply {
 
                 val ltManager = LinearLayoutManager(context)
@@ -190,6 +200,11 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnD
 
 
             val time = formattedTime(weatherForecast.current.sunrise, weatherForecast.timezone)
+
+
+            //Remove the loading background and its lottie loading icon
+            loadingSemitransparentBackground.visibility = View.GONE
+            loadingLottieIcon.visibility = View.GONE
 
 
             val animationDuration = if (playAnimation) 2000L else 0
@@ -247,7 +262,7 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnD
         savedStateHandle?.getLiveData<CityNameAndCoordinates>(SearchWeatherFragment.KEY_CITY_FEATURE)
             ?.observe(viewLifecycleOwner) { cityBasicInfo ->
 
-                weatherViewModel.requestWeatherForecastAndCurrentConditions(cityBasicInfo)
+                weatherViewModel.sendNameAndGetForecasts(cityBasicInfo)
 
                 savedStateHandle.remove<String>(SearchWeatherFragment.KEY_CITY_FEATURE)
 
@@ -257,19 +272,29 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnD
     override fun onDayClicked(day: DailyConditions) {
 
         weatherViewModel.clickedADay(day)
-
     }
 
 
     override fun onResume() {
         super.onResume()
-        Log.i(TAG, "The savedstate is ${weatherViewModel.state}")
 
         if (!weatherViewModel.state.keys().isEmpty()) {
-            Log.i(TAG, "The savedstate is not null")
             setTheView(binding, weatherViewModel.state.get(SAVED_WEATHER)!!, false)
         }
     }
 
 
+
+    private fun showSystemUI(view: HomeWeatherScreenFragmentBinding) {
+
+        val window = activity?.window
+        if (window != null) {
+
+            WindowCompat.setDecorFitsSystemWindows(window, true)
+            WindowInsetsControllerCompat(
+                window,
+                view.root
+            ).show(WindowInsetsCompat.Type.systemBars())
+        }
+    }
 }

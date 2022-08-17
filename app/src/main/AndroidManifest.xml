@@ -14,20 +14,15 @@ package="com.leonardo.pani.weatherapp">
     android:supportsRtl="true"
     android:theme="@style/Theme.WeatherApp"
     android:usesCleartextTraffic="true">
-    <activity android:name=".view.HomeActivity">
+    <activity android:name=".view.HomeActivity"
+        android:screenOrientation="portrait">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
-    <!--<activity
-        android:name=".view.HomeActivity"
-        android:screenOrientation="portrait">
 
-        <nav-graph android:value="@navigation/nav_graph" />
-
-    </activity> -->
 
     <meta-data
         android:name="preloaded_fonts"

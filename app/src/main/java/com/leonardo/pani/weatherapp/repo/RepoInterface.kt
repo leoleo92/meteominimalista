@@ -12,6 +12,6 @@ interface RepoInterface {
 
     suspend fun getCities(cityName: String) :  Response<CitiesList>
 
-    suspend fun getDailyForecasta(cityLatAndLong: List<Double>) : Response<DaysForecasts>
+    suspend fun getDailyForecasts(cityLatAndLong: List<Double>) : Response<DaysForecasts>
 
 }

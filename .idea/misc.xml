@@ -6,13 +6,18 @@
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2925" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/circle.xml" value="0.211" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/city_image.xml" value="0.313" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/down_arrow.xml" value="0.251" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/get_large.xml" value="0.313" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/gradient_drawable.xml" value="0.2925" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2685" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/image_place_24.xml" value="0.2925" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/location_icn.xml" value="0.313" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/splash_background.xml" value="0.3675" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/sun_vector.xml" value="0.251" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/test_background.xml" value="0.2925" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/up_arrow.xml" value="0.251" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout-land/home_weather_screen_fragment.xml" value="0.33" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout-port/home_weather_screen_fragment.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_maps.xml" value="0.23072916666666668" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/city_location_list_item.xml" value="0.31521739130434784" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/detailed_weather_forecast_single_layout.xml" value="0.31521739130434784" />
@@ -21,13 +26,14 @@
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/fragment_detailed.xml" value="0.33" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/home_acitivity.xml" value="0.15885416666666666" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/home_weather_screen_fragment.xml" value="0.33" />
-        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/lack_connection_layout.xml" value="0.34057971014492755" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/lack_connection_layout.xml" value="0.2" />
         <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/single_weather_layout.xml" value="0.5" />
-        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/splash_screen.xml" value="0.10562310030395136" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/splash_screen.xml" value="0.18" />
+        <entry key="..\:/Users/Leonardo - Lavoro/AndroidStudioProjects/WeatherApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.251" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

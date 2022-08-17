@@ -72,21 +72,7 @@ class AppModule {
 
     }
 
-    /*@Binds
-    abstract fun bindingFunction(myImplementor: WeatherRepo) : RepoInterface
 
-
-
-
-/*
-    @Singleton
-     fun bindingFunction(myImplementor: WeatherRepo) : RepoInterface*/
-
-
-    object MyModule{
-
-
-    }*/
 
 
 }

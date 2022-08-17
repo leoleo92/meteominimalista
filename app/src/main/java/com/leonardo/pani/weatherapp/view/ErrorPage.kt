@@ -18,15 +18,17 @@ class ErrorPage: Fragment(R.layout.error_page_layout) {
 
         activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+
+                //todo
                 //activity?.finish()
                 //activity?.moveTaskToBack(true)
                 //activity?.finish()
-                val intent = Intent(activity, SplashScreenActivity::class.java)
+               /*val intent = Intent(activity, SplashScreenActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 intent.putExtra("EXIT", true)
                 startActivity(intent)
 
-                activity!!.finish()
+                activity!!.finish()*/
             }
 
         })

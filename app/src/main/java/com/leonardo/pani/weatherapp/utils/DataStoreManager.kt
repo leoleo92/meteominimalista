@@ -47,7 +47,6 @@ class DataStoreManager @Inject constructor(@ApplicationContext val context: Cont
         val cityLong = it[CITY_LONG]?.toDouble() ?:0.0
         val cityName = it[CITY_NAME] ?: "N/A"
         CityNameAndCoordinates(listOf(cityLat,cityLong),cityName)
-    //Pair(cityLat,cityLong)
     }
 
 

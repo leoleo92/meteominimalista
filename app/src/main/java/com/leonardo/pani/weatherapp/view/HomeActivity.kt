@@ -1,14 +1,22 @@
 package com.leonardo.pani.weatherapp.view
 
 import android.content.Context
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.view.animation.AlphaAnimation
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
+import com.airbnb.lottie.LottieAnimationView
 import com.leonardo.pani.weatherapp.R
 import com.leonardo.pani.weatherapp.databinding.HomeAcitivityBinding
+import com.leonardo.pani.weatherapp.databinding.SplashScreenBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -24,6 +32,7 @@ class HomeActivity : AppCompatActivity() {
         Log.i("HomeActivity","Homeactivity created")
 
 
+
         //Check if the User is connected to Internet
         if(isOnline(applicationContext)) {
 
@@ -31,18 +40,33 @@ class HomeActivity : AppCompatActivity() {
         }else {
             //If not, redirect the user to an error page and ask him/her to activate the connection
             setContentView(R.layout.lack_connection_layout)
-            val tryAgainBtn = findViewById<Button>(R.id.retry_btn)
+            val tryAgainBtn = findViewById<LottieAnimationView>(R.id.retry_btn)
             tryAgainBtn.setOnClickListener {
+
+
+                tryAgainBtn.speed = 1F
+                tryAgainBtn.playAnimation()
 
                 if(isOnline(applicationContext)) {
 
-                    inflateMainActivity()
+                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+                        inflateMainActivity()
+
+                    }, 2000)
+
+
+
                 }
 
             }
         }
 
     }
+
+
+
+
 
 
     fun inflateMainActivity() {

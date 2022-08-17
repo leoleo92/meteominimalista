@@ -33,7 +33,7 @@ class SearchCityViewModel @Inject constructor(private val repo: RepoInterface) :
         viewModelScope.launch {
 
             val apiResponse = repo.getCities(city)
-            Log.d(TAG, apiResponse.body().toString())
+            //Log.d(TAG, apiResponse.body().toString())
 
 
             if (apiResponse.isSuccessful) {
