@@ -140,11 +140,11 @@ class SearchWeatherFragment : Fragment(R.layout.search_layout), SearchItemClickL
         searchViewModel.clickedCity(city)
     }
 
+
     override fun onPause() {
         super.onPause()
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
 
     }
-
 }
 
