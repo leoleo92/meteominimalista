@@ -1,3 +1,5 @@
+# Meteo Minimalista
+![app_icon](https://user-images.githubusercontent.com/24638656/185271443-043b0748-601d-406e-b426-5edfcbbf21b1.png)
 
 Meteo Minimalista is a simple weather App that provides current weather conditions and 7 days forecast.  
 It uses various APIs, inlcuding openweathermap for the current weather conditions,mapbox to search various locations across the world and open-meteo in order to get detailed 7 days forecasts.
