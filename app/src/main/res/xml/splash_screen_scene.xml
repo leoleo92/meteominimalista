@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MotionScene 
+<MotionScene
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start">
-       <KeyFrameSet>
-           <KeyAttribute
-               motion:motionTarget="@+id/sun_and_cloud_lottie"
-               motion:framePosition="100"
-               android:scaleX="20"
-               android:scaleY="20" />
-       </KeyFrameSet>
+        <KeyFrameSet>
+            <KeyAttribute
+                motion:motionTarget="@+id/sun_and_cloud_lottie"
+                motion:framePosition="100"
+                android:scaleX="20"
+                android:scaleY="20" />
+        </KeyFrameSet>
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
