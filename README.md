@@ -20,5 +20,5 @@ The APP was built using Kotlin and the MVVM architecture.
 - LiveData
 ## Testing
 - Mockito
-- Roboeletric
+- Roboelectric
 
