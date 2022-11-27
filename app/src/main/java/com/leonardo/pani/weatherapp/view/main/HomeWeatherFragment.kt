@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.SavedStateViewModelFactory
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -55,11 +56,14 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnD
         ViewModelProvider(this).get(WeatherViewModel::class.java)
     }
 
+    //private val weatherViewModel: WeatherViewModel by viewModels()
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = HomeWeatherScreenFragmentBinding.bind(view)
 
+        Log.i(TAG, "Homefragment created")
         showSystemUI(binding)
 
         setBackStackEntryObserver()
@@ -124,6 +128,8 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnD
                     }
 
                     is WeatherViewModel.WeatherUseCases.NavigateToTheErrorPage -> {
+
+
                         val action =
                             HomeWeatherFragmentDirections.actionHomeWeatherFragmentToErrorPage()
                         findNavController().navigate(action)
@@ -157,6 +163,7 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnD
 
             val mainIconToLoad =
                 ICON_IDS_CURRENT_WEATHER_API.get(weatherForecast.current.weather.get(0).icon)
+
 
             Glide.with(root)
                 .load(mainIconToLoad)
@@ -277,6 +284,8 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnD
 
     override fun onResume() {
         super.onResume()
+
+        Log.i("HomeWeatherFragment", "onResume")
 
         if (!weatherViewModel.state.keys().isEmpty()) {
             setTheView(binding, weatherViewModel.state.get(SAVED_WEATHER)!!, false)

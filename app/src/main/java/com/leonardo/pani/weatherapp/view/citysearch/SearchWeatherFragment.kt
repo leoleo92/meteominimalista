@@ -146,5 +146,10 @@ class SearchWeatherFragment : Fragment(R.layout.search_layout), SearchItemClickL
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+    }
 }
 

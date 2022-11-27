@@ -6,17 +6,21 @@ import com.leonardo.pani.weatherapp.model.CityNameAndCoordinates
 import com.leonardo.pani.weatherapp.model.DailyConditions
 import com.leonardo.pani.weatherapp.model.HourlyConditions
 import com.leonardo.pani.weatherapp.model.PreviewConditions
+import com.leonardo.pani.weatherapp.model.jsonGenerated.DaysForecasts
 import com.leonardo.pani.weatherapp.model.jsonGenerated.WeatherForecast
 import com.leonardo.pani.weatherapp.repo.RepoInterface
 import com.leonardo.pani.weatherapp.utils.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
 
 const val SAVED_WEATHER = "saved_weather_forecast"
-const val VIEWMODEL_TAG = "WeatherViewModel"
 
 
 @HiltViewModel
@@ -40,18 +44,19 @@ class WeatherViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            dataStore.readLastCityInfo().collect {
 
-                //It means we didn't store any value previosuly and we need to go to the search city fragment
-                if (it.coordinates.sum() == 0.0) {
+            val cityNameAndCoordinates = dataStore.readLastCityInfo().first()
 
-                    weatherChannel.send(WeatherUseCases.NavigateToSetLocationScreen())
 
-                } else {
-                    //Get the forecast and send it to the UI
-                    requestWeatherForecastAndCurrentConditions(it)
+            if (cityNameAndCoordinates.coordinates.sum() == 0.0) {
 
-                }
+                weatherChannel.send(WeatherUseCases.NavigateToSetLocationScreen())
+
+            } else {
+                //Get the forecast and send it to the UI
+                requestWeatherForecastAndCurrentConditions(cityNameAndCoordinates)
+
+
             }
         }
     }
@@ -75,23 +80,23 @@ class WeatherViewModel @Inject constructor(
 
 
         //7 days conditions
-        val dailyForecastsResponse =
-            repo.getDailyForecasts(cityLatAndLong = basicInfo.coordinates)
-
+        //var dailyForecastsResponse: Response<DaysForecasts>? = null
+        val dailyForecastsResponse = repo.getDailyForecasts(cityLatAndLong = basicInfo.coordinates)
 
         //Current conditions
-        val weatherInfo =
-            repo.getCurrentConditionAndForecasts(cityLatAndLong = basicInfo.coordinates)
+        //var weatherInfo : Response<WeatherForecast>? = null
+        val weatherInfo = repo.getCurrentConditionAndForecasts(cityLatAndLong = basicInfo.coordinates)
 
 
-        val dailyForecastsContent = dailyForecastsResponse.body()
+        val dailyForecastsContent = dailyForecastsResponse?.body()
 
         val dailyConditions = mutableListOf<DailyConditions>()
 
 
+        Log.i("WeatherViewModel","Called the view model!")
 
-
-        if ((dailyForecastsResponse.isSuccessful && dailyForecastsResponse.body() != null) && (weatherInfo.isSuccessful && weatherInfo.body() != null)) {
+        //if ((dailyForecastsResponse.isSuccessful && dailyForecastsResponse?.body() != null) && (weatherInfo.isSuccessful && weatherInfo.body() != null))
+        if ((dailyForecastsResponse.isSuccessful && dailyForecastsResponse?.body() != null) && (weatherInfo.isSuccessful && weatherInfo.body() != null)) {
 
 
             dailyForecastsContent.run {
@@ -169,7 +174,7 @@ class WeatherViewModel @Inject constructor(
             }
 
             //Current weather conditions
-            var forecast = weatherInfo.body()
+            var forecast = weatherInfo?.body()
 
             val finalWeatherForecast = forecast?.copy(
                 coordinates = basicInfo.coordinates,
