@@ -1,6 +1,5 @@
 package com.leonardo.pani.weatherapp.di
 
-import com.google.gson.Gson
 import com.leonardo.pani.weatherapp.api.DetailedForecastApi
 import com.leonardo.pani.weatherapp.api.SearchPlaceApi
 import com.leonardo.pani.weatherapp.api.WeatherForecastApi
@@ -13,7 +12,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 
@@ -26,7 +24,7 @@ class AppModule {
         const val FORECAST_API_KEY = "44898f8f09d19a34de6b729b27c18dd3"
         const val FORECAST_BASE_URL = "https://api.openweathermap.org/data/2.5/"
         const val LOCATION_SEARCH_BASE_URL = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
-        const val MAP_BOX_TOKEN = "pk.eyJ1IjoibGlvbmFwcCIsImEiOiJjbDJqdmJnNTEwajZ4M2ZzM3pzeXAxZXljIn0.6p9_7IB77CwPeb2NxrNdrg"
+        const val MAP_BOX_TOKEN = "pk.eyJ1IjoibGVvbGVvbGVvOSIsImEiOiJjbGI2cDZrbHowM245M3Fxbnh3cHBtdWFpIn0.G6HW34kRces6XSNs4Di-1g"
         const val DAILY_FORECASTS_BASE_URL = "https://api.open-meteo.com/v1/"
     }
 
@@ -34,7 +32,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRetroFitInst(): SearchPlaceApi {
+    fun provideSearchAPIRetroFitInst(): SearchPlaceApi {
         return Retrofit.Builder().baseUrl(LOCATION_SEARCH_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -44,7 +42,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRetroFitInst2(): WeatherForecastApi {
+    fun provideBasicWeatherAPIRetroFitInst(): WeatherForecastApi {
         return Retrofit.Builder().baseUrl(FORECAST_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -54,7 +52,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRettrofitInst3() : DetailedForecastApi {
+    fun provideDetailedWeatherAPIRetroFitInst() : DetailedForecastApi {
         return Retrofit.Builder().baseUrl(DAILY_FORECASTS_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

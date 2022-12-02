@@ -56,14 +56,11 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnD
         ViewModelProvider(this).get(WeatherViewModel::class.java)
     }
 
-    //private val weatherViewModel: WeatherViewModel by viewModels()
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = HomeWeatherScreenFragmentBinding.bind(view)
 
-        Log.i(TAG, "Homefragment created")
         showSystemUI(binding)
 
         setBackStackEntryObserver()
@@ -294,6 +291,7 @@ class HomeWeatherFragment : Fragment(R.layout.home_weather_screen_fragment), OnD
 
 
 
+    //Remove full screen mode after splash screen
     private fun showSystemUI(view: HomeWeatherScreenFragmentBinding) {
 
         val window = activity?.window

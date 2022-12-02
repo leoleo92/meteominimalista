@@ -22,8 +22,11 @@ class DetailedWeatherAdapter: ListAdapter<HourlyConditions,DetailedWeatherAdapte
 
             binding.apply {
                 hourOfTheDay.text = item.hour
+
+                //Retrieve the correct weather icon from the Consts
                 val iconToLoad = Consts.ICON_IDS_7_DAYS_FORECAST_API.get("${item.weatherCondition}")
                 Glide.with(binding.root).load(iconToLoad).into(currentWeatherIcn)
+
                 temperature.text = "${item.temperature?.toInt().toString()}°"
                 tempFeelsLike.text = "p.${item.feelsLikeTemp?.toInt().toString()}°"
                 precipitationSum.text = "${item.precipitation} mm"

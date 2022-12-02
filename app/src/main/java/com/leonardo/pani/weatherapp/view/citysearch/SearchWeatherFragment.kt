@@ -31,7 +31,8 @@ class SearchWeatherFragment : Fragment(R.layout.search_layout), SearchItemClickL
 
 
     companion object {
-        const val KEY_CITY_FEATURE = "com.leonardo.pani.weatherapp.view.citysearch.SearchWeatherFragment"
+        const val KEY_CITY_FEATURE =
+            "com.leonardo.pani.weatherapp.view.citysearch.SearchWeatherFragment"
     }
 
 
@@ -68,13 +69,13 @@ class SearchWeatherFragment : Fragment(R.layout.search_layout), SearchItemClickL
                 override fun onQueryTextChange(newText: String?): Boolean {
 
 
-                    if (newText != null) {
+                    newText?.let {
 
                         if (newText.length >= 3) {
                             try {
                                 searchViewModel.search(newText)
-                            }catch (e: Exception) {
-                                Log.e(TAG,e.toString())
+                            } catch (e: Exception) {
+                                Log.e(TAG, e.toString())
                                 imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
 
                             }
@@ -83,8 +84,11 @@ class SearchWeatherFragment : Fragment(R.layout.search_layout), SearchItemClickL
                         }
 
                         return true
-                    } else
-                        return false
+                    }
+
+
+
+                    return false
                 }
             })
 
@@ -108,15 +112,17 @@ class SearchWeatherFragment : Fragment(R.layout.search_layout), SearchItemClickL
                 when (event) {
 
                     is SearchCityViewModel.CityChannel.ClickedCityName -> {
-                        Log.d(TAG, "Clicked city, popping the previous fragment ")
                         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
 
-                        val cityBasicInfo = CityNameAndCoordinates(event.cityFeature.geometry.coordinates,event.cityFeature.place_name)
+                        val cityBasicInfo = CityNameAndCoordinates(
+                            event.cityFeature.geometry.coordinates,
+                            event.cityFeature.place_name
+                        )
 
-                            findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                                KEY_CITY_FEATURE,
-                                cityBasicInfo
-                            )
+                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                            KEY_CITY_FEATURE,
+                            cityBasicInfo
+                        )
                         findNavController().popBackStack()
                     }
 

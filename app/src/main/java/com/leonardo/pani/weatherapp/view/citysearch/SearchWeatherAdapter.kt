@@ -17,7 +17,6 @@ class SearchWeatherAdapter(val listener: SearchItemClickListener): ListAdapter<F
         RecyclerView.ViewHolder(binding.root) {
 
 
-
         fun bind(city: Feature) {
 
 

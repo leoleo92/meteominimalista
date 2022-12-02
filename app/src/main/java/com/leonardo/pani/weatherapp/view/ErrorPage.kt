@@ -19,8 +19,9 @@ class ErrorPage: Fragment(R.layout.error_page_layout) {
         activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
 
+                activity?.finish()
+
                 //todo
-                //activity?.finish()
                 //activity?.moveTaskToBack(true)
                 //activity?.finish()
                /*val intent = Intent(activity, SplashScreenActivity::class.java)

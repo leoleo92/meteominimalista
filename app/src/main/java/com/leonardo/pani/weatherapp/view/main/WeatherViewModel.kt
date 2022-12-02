@@ -48,6 +48,7 @@ class WeatherViewModel @Inject constructor(
             val cityNameAndCoordinates = dataStore.readLastCityInfo().first()
 
 
+            //If they're equal to zero it means we don't have any coordinates yet
             if (cityNameAndCoordinates.coordinates.sum() == 0.0) {
 
                 weatherChannel.send(WeatherUseCases.NavigateToSetLocationScreen())
@@ -80,23 +81,20 @@ class WeatherViewModel @Inject constructor(
 
 
         //7 days conditions
-        //var dailyForecastsResponse: Response<DaysForecasts>? = null
         val dailyForecastsResponse = repo.getDailyForecasts(cityLatAndLong = basicInfo.coordinates)
+        val dailyForecastsContent = dailyForecastsResponse.body()
+
 
         //Current conditions
-        //var weatherInfo : Response<WeatherForecast>? = null
-        val weatherInfo = repo.getCurrentConditionAndForecasts(cityLatAndLong = basicInfo.coordinates)
+        val weatherInfo =
+            repo.getCurrentConditionAndForecasts(cityLatAndLong = basicInfo.coordinates)
 
-
-        val dailyForecastsContent = dailyForecastsResponse?.body()
 
         val dailyConditions = mutableListOf<DailyConditions>()
 
 
-        Log.i("WeatherViewModel","Called the view model!")
 
-        //if ((dailyForecastsResponse.isSuccessful && dailyForecastsResponse?.body() != null) && (weatherInfo.isSuccessful && weatherInfo.body() != null))
-        if ((dailyForecastsResponse.isSuccessful && dailyForecastsResponse?.body() != null) && (weatherInfo.isSuccessful && weatherInfo.body() != null)) {
+        if ((dailyForecastsResponse.isSuccessful && dailyForecastsResponse.body() != null) && (weatherInfo.isSuccessful && weatherInfo.body() != null)) {
 
 
             dailyForecastsContent.run {
@@ -105,9 +103,10 @@ class WeatherViewModel @Inject constructor(
                 var hoursStartIndex = 0
                 var hoursEndIndex = 23
 
+
                 val numberOfForecastDays = this?.daily?.weathercode!!
 
-                //For every day create an object with the preview and detailed information
+                //For every day create an object with the preview and detailed information and add it to the list 'dailyConditions'
                 for (i in 0..numberOfForecastDays.size) {
 
                     //Preview infos
@@ -127,33 +126,33 @@ class WeatherViewModel @Inject constructor(
                         sunriseTime
                     )
 
+
                     val hoursConditions = mutableListOf<HourlyConditions>()
 
-
-                    //Detailed info
+                    //Detailed info for every hour
                     for (j in hoursStartIndex..hoursEndIndex) {
 
-                        val detailedForecastListSize =this.hourly.weathercode.size
+                        val detailedForecastListSize = this.hourly.weathercode.size
 
-                        if(j < detailedForecastListSize) {
-                        val hour = this.hourly.time.get(j).substring(11, 16)
-                        val temperature = this.hourly.temperature_2m.get(j)
-                        val feelsLikeTemp = this.hourly.apparent_temperature.get(j)
-                        val weatherCondition = this.hourly.weathercode.get(j)
-                        val precipitation = this.hourly.precipitation.get(j)
+                        //Filter only the hours 00:00 to 23:00
+                        if (j < detailedForecastListSize) {
+                            val hour = this.hourly.time.get(j).substring(11, 16)
+                            val temperature = this.hourly.temperature_2m.get(j)
+                            val feelsLikeTemp = this.hourly.apparent_temperature.get(j)
+                            val weatherCondition = this.hourly.weathercode.get(j)
+                            val precipitation = this.hourly.precipitation.get(j)
 
 
-
-                        hoursConditions.add(
-                            HourlyConditions(
-                                hour,
-                                temperature,
-                                feelsLikeTemp,
-                                weatherCondition,
-                                precipitation
+                            hoursConditions.add(
+                                HourlyConditions(
+                                    hour,
+                                    temperature,
+                                    feelsLikeTemp,
+                                    weatherCondition,
+                                    precipitation
+                                )
                             )
-                        )
-                    }
+                        }
 
                     }
 
@@ -191,7 +190,6 @@ class WeatherViewModel @Inject constructor(
         } else {
             weatherChannel.send(WeatherUseCases.NavigateToTheErrorPage())
         }
-
 
 
     }

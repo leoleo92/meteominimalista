@@ -33,10 +33,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        //Used to pass the Api key
-        each{type ->
-            type.buildConfigField("String", 'MAIN_API', '\"kAorEB2sPPCGRPHIMfrh1xy5baDnpX8q\"')
-        }
 
 
     }
